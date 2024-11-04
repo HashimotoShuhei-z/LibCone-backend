@@ -18,7 +18,15 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
+            $table->string('gender_id'); # 0:男性　1:女性
+            $table->integer('age');
+            $table->string('type_id'); # 0:社員　1:管理者
+            $table->string('user_icon')->nullable();
+            $table->foreignId('company_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->integer('month_point')->default(0);
+            $table->integer('special_point')->default(0)->after('month_point');
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
@@ -42,6 +50,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropForeign(['company_id']);
+        });
+
         Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
