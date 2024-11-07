@@ -15,7 +15,7 @@ class Review extends Model
         'book_company_id',
         'review_title',
         'review_content',
-        'review_rate'        
+        'review_rate'
     ];
 
     public function user()
