@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserPosition extends Model
 {
+    /**
+     * @phpstan-use HasFactory<\Database\Factories\UserFactory>
+     */
     use HasFactory;
 
     protected $table = 'users_positions';

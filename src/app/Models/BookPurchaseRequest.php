@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class BookPurchaseRequest extends Model
 {
+    /**
+     * @phpstan-use HasFactory<\Database\Factories\UserFactory>
+     */
     use HasFactory;
 
     protected $fillable = [

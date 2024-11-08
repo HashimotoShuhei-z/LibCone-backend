@@ -4,9 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ReviewReaction extends Model
 {
+    /**
+     * @phpstan-use HasFactory<\Database\Factories\UserFactory>
+     */
     use HasFactory;
 
     protected $fillable = [
@@ -15,17 +19,29 @@ class ReviewReaction extends Model
         'stamp_id'
     ];
 
-    public function stamp()
+    /**
+     *
+     * @return BelongsTo<Stamp, $this>
+     */
+    public function stamp(): BelongsTo
     {
         return $this->belongsTo(Stamp::class);
     }
 
-    public function review()
+    /**
+     *
+     * @return BelongsTo<Review, $this>
+     */
+    public function review(): BelongsTo
     {
         return $this->belongsTo(Review::class);
     }
 
-    public function user()
+    /**
+     *
+     * @return BelongsTo<User, $this>
+     */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
