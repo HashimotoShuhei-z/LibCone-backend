@@ -4,6 +4,8 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -31,22 +33,38 @@ class User extends Authenticatable
         'special_point',
     ];
 
-    public function company()
+    /**
+     *
+     * @return BelongsTo<Company, $this>
+     */
+    public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);
     }
 
-    public function positions()
+    /**
+     *
+     * @return BelongsToMany<Position, $this>
+     */
+    public function positions(): BelongsToMany
     {
         return $this->belongsToMany(Position::class, 'users_positions');
     }
 
-    public function borrowCompanyBooks()
+    /**
+     *
+     * @return BelongsToMany<CompanyBook, $this>
+     */
+    public function borrowCompanyBooks(): BelongsToMany
     {
         return $this->belongsToMany(CompanyBook::class, 'borrowed_book_logs');
     }
 
-    public function reviewCompanyBooks()
+    /**
+     *
+     * @return BelongsToMany<CompanyBook, $this>
+     */
+    public function reviewCompanyBooks(): BelongsToMany
     {
         return $this->belongsToMany(CompanyBook::class, 'reviews');
     }

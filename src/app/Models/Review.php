@@ -4,10 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Review extends Model
 {
+    /**
+     * @phpstan-use HasFactory<\Database\Factories\UserFactory>
+     */
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
@@ -15,20 +20,32 @@ class Review extends Model
         'book_company_id',
         'review_title',
         'review_content',
-        'review_rate'        
+        'review_rate'
     ];
 
-    public function user()
+    /**
+     *
+     * @return BelongsTo<User, $this>
+     */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function companyBook()
+    /**
+     *
+     * @return BelongsTo<CompanyBook, $this>
+     */
+    public function companyBook(): BelongsTo
     {
         return $this->belongsTo(CompanyBook::class);
     }
 
-    public function reactionUser()
+    /**
+     *
+     * @return BelongsToMany<ReviewReaction, $this>
+     */
+    public function reactionUser(): BelongsToMany
     {
         return $this->belongsToMany(ReviewReaction::class, 'review_reactions');
     }

@@ -4,9 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class BorrowedBookLog extends Model
 {
+    /**
+     * @phpstan-use HasFactory<\Database\Factories\UserFactory>
+     */
     use HasFactory;
 
     protected $fillable = [
@@ -17,12 +21,20 @@ class BorrowedBookLog extends Model
         'returned_at'
     ];
 
-    public function user()
+    /**
+     *
+     * @return BelongsTo<User, $this>
+     */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function companyBook()
+    /**
+     *
+     * @return BelongsTo<CompanyBook, $this>
+     */
+    public function companyBook(): BelongsTo
     {
         return $this->belongsTo(CompanyBook::class);
     }
