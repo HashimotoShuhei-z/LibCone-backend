@@ -18,8 +18,8 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
-            $table->string('gender_id'); # 0:男性　1:女性
-            $table->integer('age');
+            $table->string('gender_id')->nullable(); # 0:男性　1:女性
+            $table->integer('age')->nullable();
             $table->string('type_id'); # 0:社員　1:管理者
             $table->string('user_icon')->nullable();
             $table->foreignId('company_id')->nullable()->constrained()->cascadeOnDelete();
