@@ -3,10 +3,16 @@
 namespace App\Services;
 
 use App\Models\CompanyBook;
+use Illuminate\Database\Eloquent\Collection;
 
 class InternalBookService
 {
-    public function getInternalBookList($filters, $company_id)
+    /**
+     * @param array<string, mixed> $filters
+     * @param int $company_id
+     * @return Collection<int, CompanyBook>
+     */    
+    public function getInternalBookList(array $filters, int $company_id): Collection
     {
         $query = CompanyBook::query()
             ->with(['book', 'reviews', 'book.bookGenres', 'book.author'])
@@ -29,13 +35,17 @@ class InternalBookService
         return $query->get();
     }
 
-    public function getInternalBookItem(CompanyBook $companyBook)
+    /**
+     * @param CompanyBook $company_book
+     * @return Collection<int, CompanyBook>
+     */
+    public function getInternalBookItem(CompanyBook $company_book): Collection
     {
-        return $companyBook->with(['book', 'reviews'])->get();
+        return $company_book->with(['book', 'reviews'])->get();
     }
 
-    public function createInternalBook($data, $companyId)
-    {
-        // 書籍の登録ロジック（省略）
-    }
+    // public function createInternalBook($data, $companyId)
+    // {
+    //     // 書籍の登録ロジック（省略）
+    // }
 }

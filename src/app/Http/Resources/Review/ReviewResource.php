@@ -6,16 +6,22 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ReviewResource extends JsonResource
 {
+    /**
+     * 
+     * @return array<string, mixed>
+     */
     public function toArray($request)
     {
+        $item = $this->resource;
+
         return [
-            'userId' => $this->user->id,
-            'userName' => $this->user->name,
-            'userIcon' => $this->user->user_icon,
-            'reviewRate' => $this->review_rate,
-            'reviewTitle' => $this->review_title,
-            'reviewContent' => $this->review_content,
-            'createdAt' => $this->created_at->format('Y-m-d'),
+            'userId' => $item->user->id,
+            'userName' => $item->user->name,
+            'userIcon' => $item->user->user_icon,
+            'reviewRate' => $item->review_rate,
+            'reviewTitle' => $item->review_title,
+            'reviewContent' => $item->review_content,
+            'createdAt' => $item->created_at->format('Y-m-d'),
         ];
     }
 }

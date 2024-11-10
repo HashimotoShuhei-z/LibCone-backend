@@ -6,18 +6,24 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class InternalBookListResource extends JsonResource
 {
+    /**
+     * 
+     * @return array<string, mixed>
+     */
     public function toArray($request)
     {
+        $item = $this->resource;
+
         return [
-            'bookId' => $this->book->id,
-            'bookName' => $this->book->book_title,
-            'bookGenreName' => $this->book->bookGenres->pluck('genre_name'),  // ジャンル名を配列として取得
-            'bookImage' => $this->book->book_image,
-            'bookPublisher' => $this->book->book_publisher,
-            'authorId' => $this->book->author->id,
-            'authorName' => $this->book->author->author_name,
-            'averageReviewRate' => $this->reviews->avg('review_rate'),  // レビュー平均
-            'rentalInformation' => $this->in_office,
+            'bookId' => $item->book->id,
+            'bookName' => $item->book->book_title,
+            'bookGenreName' => $item->book->bookGenres->pluck('genre_name'),  // ジャンル名を配列として取得
+            'bookImage' => $item->book->book_image,
+            'bookPublisher' => $item->book->book_publisher,
+            'authorId' => $item->book->author->id,
+            'authorName' => $item->book->author->author_name,
+            'averageReviewRate' => $item->reviews->avg('review_rate'),  // レビュー平均
+            'rentalInformation' => $item->in_office,
         ];
     }
 }

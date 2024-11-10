@@ -8,6 +8,9 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CreateInternalBookRequest extends FormRequest
 {
+    /**
+     * @return array<string, string>
+     */
     public function rules()
     {
         return [
