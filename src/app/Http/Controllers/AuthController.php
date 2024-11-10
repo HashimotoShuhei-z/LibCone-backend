@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Auth\AuthResource;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\UserRegisterRequest;
+use App\Http\Resources\Auth\AuthResource;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\JsonResponse;
