@@ -11,7 +11,7 @@ class InternalBookService
      * @param array<string, mixed> $filters
      * @param int $company_id
      * @return Collection<int, CompanyBook>
-     */    
+     */
     public function getInternalBookList(array $filters, int $company_id): Collection
     {
         $query = CompanyBook::query()

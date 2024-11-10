@@ -7,7 +7,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class InternalBookListResource extends JsonResource
 {
     /**
-     * 
+     *
      * @return array<string, mixed>
      */
     public function toArray($request)
