@@ -17,7 +17,7 @@ class InternalBookListResource extends JsonResource
             'authorId' => $this->book->author->id,
             'authorName' => $this->book->author->author_name,
             'averageReviewRate' => $this->reviews->avg('review_rate'),  // レビュー平均
-            'rentalInformation' => $this->in_office, 
+            'rentalInformation' => $this->in_office,
         ];
     }
 }

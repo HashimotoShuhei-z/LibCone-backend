@@ -30,7 +30,7 @@ class InternalBookController extends Controller
     public function internalBookItem(CompanyBook $company_book)
     {
         $book = $this->internal_book_service->getInternalBookItem($company_book);
-        return InternalBookItemResource::collection($book);  
+        return InternalBookItemResource::collection($book);
     }
 
     public function createInternalBook(CreateInternalBookRequest $request)

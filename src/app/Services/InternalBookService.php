@@ -13,14 +13,14 @@ class InternalBookService
             ->where('company_id', $company_id);
 
         // 書籍名による部分一致検索
-        if (!empty($filters['book_name'])) {
+        if (! empty($filters['book_name'])) {
             $query->whereHas('book', function ($q) use ($filters) {
                 $q->where('book_title', 'like', '%' . $filters['book_name'] . '%');
             });
-        } 
+        }
 
         // 書籍ジャンルIDによるフィルタリング
-        if (!empty($filters['book_genre_id'])) {
+        if (! empty($filters['book_genre_id'])) {
             $query->whereHas('book.bookGenres', function ($q) use ($filters) {
                 $q->where('book_genre_id', $filters['book_genre_id']);
             });
