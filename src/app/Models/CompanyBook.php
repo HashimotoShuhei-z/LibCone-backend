@@ -24,6 +24,24 @@ class CompanyBook extends Model
 
     /**
      *
+     * @return BelongsTo<Book, $this>
+     */
+    public function book()
+    {
+        return $this->belongsTo(Book::class);
+    }
+
+    /**
+     *
+     * @return HasMany<Review, $this>
+     */
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    /**
+     *
      * @return BelongsToMany<User, $this>
      */
     public function borrowUsers(): BelongsToMany
