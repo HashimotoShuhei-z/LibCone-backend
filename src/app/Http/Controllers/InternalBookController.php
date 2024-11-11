@@ -8,6 +8,7 @@ use App\Http\Resources\InternalBook\InternalBookItemResource;
 use App\Http\Resources\InternalBook\InternalBookListResource;
 use App\Models\CompanyBook;
 use App\Services\InternalBookService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 
@@ -34,12 +35,12 @@ class InternalBookController extends Controller
         return InternalBookItemResource::collection($book);
     }
 
-    // public function createInternalBook(CreateInternalBookRequest $request)
-    // {
-    //     $company_id = Auth::user()->company_id;
-    //     $this->internal_book_service->createInternalBook($request, $company_id);
-    //     return response()->json(['message' => 'Book created'], 201);
-    // }
+    public function createInternalBook(CreateInternalBookRequest $request): JsonResponse
+    {
+        $company_id = Auth::user()->company_id;
+        $this->internal_book_service->createBook($request, $company_id);
+        return response()->json(['message' => 'Book created'], 201);
+    }
 
     // public function deleteIntenalBook(CompanyBook $company_book)
     // {

@@ -14,7 +14,7 @@ class CreateInternalBookRequest extends FormRequest
     public function rules()
     {
         return [
-            'isbn' => 'required|string',
+            'isbn' => 'required',
         ];
     }
 
