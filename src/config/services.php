@@ -35,4 +35,7 @@ return [
         ],
     ],
 
+    'rakutenBookApi' => [
+        'key' => env('RAKUTEN_BOOKS_API_KEY')
+    ]
 ];

@@ -18,10 +18,12 @@ class DatabaseSeeder extends Seeder
             CompanySeeder::class,
             PositionSeeder::class,
             AuthorSeeder::class,
+            BookGenreSeeder::class,
             BookSeeder::class,
             UserSeeder::class,
             CompaniesBooksSeeder::class,
             ReviewSeeder::class,
+            BookBookGenreSeeder::class,
         ]);
     }
 }

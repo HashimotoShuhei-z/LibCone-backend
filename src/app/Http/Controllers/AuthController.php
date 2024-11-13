@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\LoginRequest;
-use App\Http\Requests\UserRegisterRequest;
-use App\Http\Requests\AdminRegisterRequest;
-use App\Http\Resources\AuthResource;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\UserRegisterRequest;
+use App\Http\Resources\Auth\AuthResource;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
@@ -22,7 +20,13 @@ class AuthController extends Controller
         }
 
         $user = User::query()->where('email', $request->email)->first();
-        $token = $user->createToken('authToken')->plainTextToken;
+
+        // userのtypeを判別し、tokenに権限をつける
+        $ability = ['user'];
+        if ((int)$user->type_id === 1) {
+            $ability = ['admin'];
+        }
+        $token = $user->createToken('authToken', $ability)->plainTextToken;
 
         return response()->json(new AuthResource(['token' => $token]), 200);
     }
@@ -47,7 +51,7 @@ class AuthController extends Controller
             'type_id' => 0
         ]);
 
-        $token = $user->createToken('authToken')->plainTextToken;
+        $token = $user->createToken('authToken', ['user'])->plainTextToken;
 
         return response()->json(new AuthResource(['token' => $token]), 201);
     }
@@ -61,7 +65,7 @@ class AuthController extends Controller
             'type_id' => 1,
         ]);
 
-        $token = $user->createToken('authToken')->plainTextToken;
+        $token = $user->createToken('authToken', ['admin'])->plainTextToken;
 
         return response()->json(new AuthResource(['token' => $token]), 201);
     }
