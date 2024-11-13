@@ -11,6 +11,6 @@ Route::post('/admin/register', [AuthController::class, 'adminRegister']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/internal-books', [InternalBookController::class, 'internalBookList']);
     Route::post('/internal-books', [InternalBookController::class, 'createInternalBook']);
-    Route::get('/internal-books/{book_id}', [InternalBookController::class, 'internalBookItem']);
-    Route::delete('/internal-books/{book_id}', [InternalBookController::class, 'deleteIntenalBook']);
+    Route::get('/internal-books/{company_book}', [InternalBookController::class, 'internalBookItem']);
+    Route::delete('/internal-books/{company_book}', [InternalBookController::class, 'deleteIntenalBook']);
 });
