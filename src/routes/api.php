@@ -23,5 +23,5 @@ Route::middleware('auth:sanctum', 'abilities:admin')->group(function () {
 
 // 一般ユーザー(社員)のみが叩けるエンドポイント
 Route::middleware('auth:sanctum', 'abilities:user')->group(function () {
-    // 
+    //
 });
