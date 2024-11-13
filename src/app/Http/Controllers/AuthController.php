@@ -20,7 +20,13 @@ class AuthController extends Controller
         }
 
         $user = User::query()->where('email', $request->email)->first();
-        $token = $user->createToken('authToken')->plainTextToken;
+
+        // userのtypeを判別し、tokenに権限をつける
+        $ability = ['user'];
+        if ($user->type_id === 1){
+            $ability = ['admin'];
+        } 
+        $token = $user->createToken('authToken', $ability)->plainTextToken;
 
         return response()->json(new AuthResource(['token' => $token]), 200);
     }
@@ -45,7 +51,7 @@ class AuthController extends Controller
             'type_id' => 0
         ]);
 
-        $token = $user->createToken('authToken')->plainTextToken;
+        $token = $user->createToken('authToken', ['user'])->plainTextToken;
 
         return response()->json(new AuthResource(['token' => $token]), 201);
     }
@@ -59,7 +65,7 @@ class AuthController extends Controller
             'type_id' => 1,
         ]);
 
-        $token = $user->createToken('authToken')->plainTextToken;
+        $token = $user->createToken('authToken', ['admin'])->plainTextToken;
 
         return response()->json(new AuthResource(['token' => $token]), 201);
     }
