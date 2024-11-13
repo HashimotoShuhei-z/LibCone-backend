@@ -42,7 +42,7 @@ class InternalBookController extends Controller
         return response()->json(['message' => 'Book created'], 201);
     }
 
-    public function deleteIntenalBook(CompanyBook $company_book)
+    public function deleteIntenalBook(CompanyBook $company_book): JsonResponse
     {
         $company_book->delete();
         return response()->json(['message' => 'Book deleted'], 204);

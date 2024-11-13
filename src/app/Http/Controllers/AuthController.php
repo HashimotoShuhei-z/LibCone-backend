@@ -23,7 +23,7 @@ class AuthController extends Controller
 
         // userのtypeを判別し、tokenに権限をつける
         $ability = ['user'];
-        if ($user->type_id === 1) {
+        if ((int)$user->type_id === 1) {
             $ability = ['admin'];
         }
         $token = $user->createToken('authToken', $ability)->plainTextToken;
