@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Http\Requests\Review\CreateReviewRequest;
 use App\Http\Requests\Review\UpdateReviewRequest;
 use App\Models\Review;
+use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -66,7 +67,20 @@ class BookReviewService
             'review_content' => $data->reviewContent,
             'review_rate' => $data->reviewRate,
         ];
-        return Review::create($new_review);
+
+        // 口コミの作成
+        $review = Review::create($new_review);
+
+        $user = User::findOrFail($login_user_id);
+
+        // ユーザーの会社に紐づくreview_bonus_pointを取得
+        $review_bonus_point = $user->company->review_bonus_point ?? 0;
+
+        // 口コミを投稿したユーザーのspecial_pointにreview_bonus_pointを加算して更新
+        $user->special_point += $review_bonus_point;
+        $user->save();
+
+        return $review;
     }
 
     /**
