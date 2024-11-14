@@ -20,7 +20,7 @@ return new class extends Migration
             $table->integer('book_price')->nullable();
             $table->integer('purchase_type'); # 0:個人購入, 1:会社購入
             $table->date('hope_deliver_at')->nullable();
-            $table->integer('purchase_status'); # 0:未購入, 1:購入申請中, 2:配達中, 3:配達済み, 4:拒否
+            $table->integer('purchase_status')->default(0); # 0:未購入, 1:購入申請中, 2:配達中, 3:配達済み, 4:拒否
             $table->timestamps();
         });
     }

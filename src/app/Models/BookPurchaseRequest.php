@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class BookPurchaseRequest extends Model
 {
@@ -23,4 +24,17 @@ class BookPurchaseRequest extends Model
         'purchase_status',
     ];
 
+    protected $casts = [
+        'book_price' => 'integer',
+        'hope_deliver_at' => 'date',
+    ];
+
+    /**
+     *
+     * @return BelongsTo<User, $this>
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }
