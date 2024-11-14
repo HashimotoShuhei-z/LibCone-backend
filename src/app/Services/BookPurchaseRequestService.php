@@ -18,11 +18,11 @@ class BookPurchaseRequestService
     {
         $query = BookPurchaseRequest::with('user');
 
-        if (!empty($filters['book_name'])) {
+        if (! empty($filters['book_name'])) {
             $query->where('book_title', 'like', '%' . $filters['book_name'] . '%');
         }
 
-        if (!empty($filters['position_id'])) {
+        if (! empty($filters['position_id'])) {
             $query->whereHas('user.positions', function ($q) use ($filters) {
                 $q->where('positions.id', $filters['position_id']);
             });
@@ -38,7 +38,7 @@ class BookPurchaseRequestService
      * @return BookPurchaseRequest
      */
     public function createBookPurchaseRequest(CreateBookPurchaseRequest $data): BookPurchaseRequest
-    {  
+    {
         // テーブルのカラムに合わせてデータを整形
         $new_book_purchase_request = [
             'user_id' => $data->userId,
