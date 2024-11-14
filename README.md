@@ -9,6 +9,9 @@ LibConeは、企業内の書籍の貸出、社員への書籍購入補助(福利
   - [カスタマイズ機能](#カスタマイズ機能)
 - [非対応機能](#非対応機能)
 - [インストール](#インストール)
+- [型解析とコード整形の実行コマンド](#型解析とコード整形の実行コマンド)
+- [テーブル設計](#テーブル設計)
+- [API設計](#API設計)
 
 ---
 
@@ -75,15 +78,199 @@ cd/src
 composer install
 ```
 
-## 型解析とコード整形に関するコマンド
+## 型解析とコード整形の実行コマンド
 ```bash
 # larastan実行(型解析)
 ./vendor/bin/phpstan analyse
 
 # php-cs-fixer実行(コード整形)
 ./vendor/bin/php-cs-fixer fix
+```
 
+## テーブル設計
+```mermaid
+erDiagram
 
+users{
+	int id PK
+	string name
+	string email
+	string password
+	int gender
+	int age
+	int type_id
+	string user_icon
+	int company_id FK
+	int month_point
+	int special_point
+	string created_at
+	string updated_at
+	string deleted_at
+}
 
+companies {
+	int id PK
+	string company_name
+	int company_genre_id FK
+	int monthly_available_points
+	int review_bonus_point
+	string created_at
+	string updated_at
+	string deleted_at
+}
 
+company_genres {
+	int id PK
+	string genre_name
+	string image_color
+	string created_at
+	string updated_at
+	string deleted_at
+}
+
+books {
+	int id PK
+	string isbn
+	string book_title
+	string book_publisher
+	string book_image
+	int author_id FK
+	string created_at
+	string updated_at
+}
+
+companies_books {
+	int id PK
+	int book_id FK
+	int company_id FK
+	bool in_office
+	string created_at
+	string updated_at
+	string deleted_at
+}
+
+book_genres {
+	int id PK
+	string genre_name
+	string created_at
+	string updated_at
+}
+
+books_book_genres {
+	int book_id FK
+	int book_genre_id FK
+	string created_at
+	string updated_at
+}
+
+authors {
+	int id PK
+	string author_name
+	string created_at
+	string updated_at
+	string deleted_at
+}
+
+positions {
+	int id PK
+	string position_name
+	string created_at
+	string updated_at
+	string deleted_at
+}
+
+users_positions {
+	int id PK
+	int user_id FK
+	int position_id FK
+	int experience_years
+	string created_at
+	string updated_at
+}
+
+borrowed_book_logs {
+	int id PK
+	int user_id FK
+	int company_book_id FK
+	date start_date
+	date end_date
+	string returned_at
+	string created_at
+	string updated_at
+}
+
+reviews {
+	int id PK
+	int user_id FK
+	int book_company_id FK
+	string review_title
+	string review_content
+	int review_rate
+	string created_at
+	string updated_at
+	string deleted_at
+}
+
+stamps {
+	int id PK
+	string stamp_image
+	string created_at
+	string updated_at
+	string deleted_at
+}
+
+review_reactions {
+	int user_id FK
+	int review_id FK
+	int stamp_id FK
+	string created_at
+	string updated_at 
+}
+
+book_purchase_requests {
+	int id PK
+	int user_id FK
+	string isbn
+	string book_title 
+	string book_url
+	int book_price
+	int purchase_type
+	date hope_deliver_at
+	int purchase_status
+	string created_at
+	string updated_at 
+}
+
+gift_logs {
+	int id PK
+	int point_send_user_id FK
+	int point_received_user_id FK
+	int point
+	string created_at
+	string updated_at 
+}
+
+companies ||--o{ users : "所属"
+company_genres ||--o{ companies : ""
+books ||--o{ companies_books : ""
+companies ||--o{ companies_books : ""
+authors ||--o{ books : ""
+book_genres ||--o{ books_book_genres : ""
+books ||--o{ books_book_genres : ""
+books ||--o{ borrowed_book_logs : ""
+users ||--o{ borrowed_book_logs : ""
+users ||--o{ users_positions : ""
+positions ||--o{ users_positions : ""
+users ||--o{ reviews : ""
+companies_books ||--o{ reviews : ""
+reviews ||--o{ review_reactions : ""
+users ||--o{ review_reactions : ""
+review_reactions ||--o{ stamps : ""
+users ||--o{ book_purchase_requests : ""
+gift_logs ||--o{ users : ""
+```
+
+## API設計
+- 以下のリンクからyml形式のswaggerを閲覧できます。
+  - (https://github.com/HashimotoShuhei-z/LibCone-front/blob/main/openapi/openapi.yml)
 
