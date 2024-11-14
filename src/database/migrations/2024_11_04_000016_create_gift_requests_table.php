@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('gift_requests', function (Blueprint $table) {
+        Schema::create('gift_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('point_send_user_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('point_received_user_id')->constrained('users')->cascadeOnDelete();
             $table->integer('point');
-            $table->boolean('is_gifted');
             $table->timestamps();
         });
     }
@@ -26,14 +25,14 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('gift_requests', function (Blueprint $table) {
+        Schema::table('gift_logs', function (Blueprint $table) {
             $table->dropForeign(['point_send_user_id']);
         });
 
-        Schema::table('gift_requests', function (Blueprint $table) {
+        Schema::table('gift_logs', function (Blueprint $table) {
             $table->dropForeign(['point_received_user_id']);
         });
 
-        Schema::dropIfExists('gift_requests');
+        Schema::dropIfExists('gift_logs');
     }
 };
