@@ -13,6 +13,8 @@ class CompanySeeder extends Seeder
         Company::create([
             'company_name' => 'Test Company',
             'company_genre_id' => 1,
+            'monthly_available_points' => 5000,
+            'review_bonus_point' => 500,
         ]);
     }
 }

@@ -19,6 +19,8 @@ class Company extends Model
     protected $fillable = [
         'company_name',
         'company_genre_id',
+        'monthly_available_points',
+        'review_bonus_point'
     ];
 
     /**

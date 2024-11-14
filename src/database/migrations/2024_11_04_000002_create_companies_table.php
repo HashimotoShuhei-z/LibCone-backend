@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('company_name');
             $table->foreignId('company_genre_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->integer('monthly_available_points');
+            $table->integer('review_bonus_point');
             $table->timestamps();
             $table->softDeletes();
         });
