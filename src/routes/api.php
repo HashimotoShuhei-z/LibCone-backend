@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookPurchaseRequestController;
 use App\Http\Controllers\BookReviewController;
+use App\Http\Controllers\GiftController;
 use App\Http\Controllers\InternalBookController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +20,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/book-reviews', [BookReviewController::class, 'reviewList']);
     Route::get('/book-reviews/{review}', [BookReviewController::class, 'reviewItem']);
     Route::delete('/book-reviews/{review}', [BookReviewController::class, 'deleteReview']);
+    Route::post('/gifts', [GiftController::class, 'sendGift']);
 });
 
 // 管理者のみ叩けるエンドポイント
