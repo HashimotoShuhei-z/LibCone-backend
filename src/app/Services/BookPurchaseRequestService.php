@@ -11,8 +11,8 @@ class BookPurchaseRequestService
     /**
      * 書籍購入リクエストの一覧を取得
      *
-     * @param array $filters
-     * @return Collection
+     * @param array<string, mixed> $filters
+     * @return Collection<int, BookPurchaseRequest>
      */
     public function getBookPurchaseRequests(array $filters): Collection
     {

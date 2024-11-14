@@ -22,7 +22,7 @@ class BookPurchaseRequestController extends Controller
     /**
      * 書籍購入リクエスト一覧を取得
      *
-     * @param Request $request
+     * @param bookPurchaseReqListRequest $request
      * @return JsonResponse
      */
     public function bookPurchaseReqList(bookPurchaseReqListRequest $request): JsonResponse
