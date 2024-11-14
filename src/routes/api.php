@@ -22,6 +22,7 @@ Route::middleware('auth:sanctum', 'abilities:admin')->group(function () {
     Route::post('/internal-books', [InternalBookController::class, 'createInternalBook']);
     Route::delete('/internal-books/{company_book}', [InternalBookController::class, 'deleteIntenalBook']);
     Route::get('/book-purchase-requests', [BookPurchaseRequestController::class, 'bookPurchaseReqList']);
+    Route::post('/book-purchase-requests/confirm', [BookPurchaseRequestController::class, 'confirmPurchaseRequests']);
 });
 
 // 一般ユーザー(社員)のみが叩けるエンドポイント

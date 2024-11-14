@@ -51,4 +51,15 @@ class BookPurchaseRequestService
         ];
         return BookPurchaseRequest::create($new_book_purchase_request);
     }
+
+    /**
+     * 一括購入確定処理
+     *
+     * @param array<int, int> $request_ids
+     * @return int
+     */
+    public function confirmPurchaseRequests(array $request_ids): int
+    {
+        return BookPurchaseRequest::whereIn('id', $request_ids)->update(['purchase_status' => 1]);
+    }
 }
