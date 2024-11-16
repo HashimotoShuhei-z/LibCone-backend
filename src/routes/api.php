@@ -40,4 +40,5 @@ Route::middleware('auth:sanctum', 'abilities:user')->group(function () {
     Route::post('/book-reviews', [BookReviewController::class, 'createReview']);
     Route::put('/book-reviews/{review}', [BookReviewController::class, 'updateReview']);
     Route::get('/my-page', [UserController::class, 'myPage']);
+    Route::post('/internal-books/{company_book}/borrow', [InternalBookController::class, 'borrowBook']);
 });
