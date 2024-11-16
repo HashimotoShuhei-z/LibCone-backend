@@ -21,6 +21,12 @@ class InternalBookController extends Controller
         $this->internal_book_service = $internal_book_service;
     }
 
+    /**
+     * 社内書籍の一覧取得
+     *
+     * @param InternalBookListRequest $request
+     * @return AnonymousResourceCollection
+     */
     public function internalBookList(InternalBookListRequest $request): AnonymousResourceCollection
     {
         $company_id = Auth::user()->company_id;
@@ -29,12 +35,24 @@ class InternalBookController extends Controller
         return InternalBookListResource::collection($books);
     }
 
+    /**
+     * 社内書籍の詳細取得
+     *
+     * @param CompanyBook $company_book
+     * @return AnonymousResourceCollection
+     */
     public function internalBookItem(CompanyBook $company_book): AnonymousResourceCollection
     {
         $book = $this->internal_book_service->getInternalBookItem($company_book);
         return InternalBookItemResource::collection($book);
     }
 
+    /**
+     * 社内書籍を作成
+     *
+     * @param CreateInternalBookRequest $request
+     * @return JsonResponse
+     */
     public function createInternalBook(CreateInternalBookRequest $request): JsonResponse
     {
         $company_id = Auth::user()->company_id;
@@ -42,6 +60,12 @@ class InternalBookController extends Controller
         return response()->json(['message' => 'Book created'], 201);
     }
 
+    /**
+     * 社内書籍を削除
+     *
+     * @param CompanyBook $company_book
+     * @return JsonResponse
+     */
     public function deleteIntenalBook(CompanyBook $company_book): JsonResponse
     {
         $company_book->delete();
