@@ -23,6 +23,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/book-reviews/{review}', [BookReviewController::class, 'deleteReview']);
     Route::post('/gifts', [GiftController::class, 'sendGift']);
     Route::get('/users/{user_id}/reading-log', [UserController::class, 'readingLog']);
+    Route::post('/internal-books/scan-search', [InternalBookController::class, 'scanSearch']);
 });
 
 // 管理者のみ叩けるエンドポイント

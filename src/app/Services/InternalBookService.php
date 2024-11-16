@@ -138,4 +138,20 @@ class InternalBookService
     {
         return Author::firstOrCreate(['author_name' => $author_name])->id;
     }
+
+    /**
+     * isbnから社内書籍を検索
+     *
+     * @param string $isbn
+     * @return CompanyBook|null
+     */
+    public function findBookByIsbn(string $isbn): ?CompanyBook
+    {
+        return CompanyBook::with(['book.author', 'book.bookGenres'])
+            ->whereHas('book', function ($query) use ($isbn) {
+                $query->where('isbn', $isbn);
+            })
+            ->where('in_office', true)
+            ->first();
+    }
 }

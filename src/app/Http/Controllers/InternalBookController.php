@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Book\ScanSearchRequest;
 use App\Http\Requests\InternalBook\CreateInternalBookRequest;
 use App\Http\Requests\InternalBook\InternalBookListRequest;
 use App\Http\Resources\InternalBook\InternalBookItemResource;
@@ -70,5 +71,22 @@ class InternalBookController extends Controller
     {
         $company_book->delete();
         return response()->json(['message' => 'Book deleted'], 204);
+    }
+
+    /**
+     * 書籍のバーコードで社内書籍を検索
+     *
+     * @param ScanSearchRequest $request
+     * @return JsonResponse
+     */
+    public function scanSearch(ScanSearchRequest $request): JsonResponse
+    {
+        $company_book = $this->internal_book_service->findBookByIsbn($request->isbn);
+
+        if (! $company_book) {
+            return response()->json(['error' => 'Book not found'], 404);
+        }
+
+        return response()->json(new InternalBookItemResource($company_book));
     }
 }
