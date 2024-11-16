@@ -103,7 +103,7 @@ class InternalBookController extends Controller
     {
         $borrow_log = $this->internal_book_service->borrowBook($request, $company_book);
 
-        if (!$borrow_log) {
+        if (! $borrow_log) {
             return response()->json(['error' => 'Book is not available for borrowing'], 404);
         }
 

@@ -169,7 +169,7 @@ class InternalBookService
     {
         $user = Auth::user();
 
-        if (!$company_book->in_office) {
+        if (! $company_book->in_office) {
             return null;
         }
 
