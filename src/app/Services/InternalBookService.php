@@ -2,13 +2,16 @@
 
 namespace App\Services;
 
+use App\Http\Requests\Book\BorrowBookRequest;
 use App\Http\Requests\InternalBook\CreateInternalBookRequest;
 use App\Models\Author;
 use App\Models\Book;
+use App\Models\BorrowedBookLog;
 use App\Models\CompanyBook;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Http;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class InternalBookService
 {
@@ -137,5 +140,49 @@ class InternalBookService
     protected function getOrCreateAuthorId($author_name): int
     {
         return Author::firstOrCreate(['author_name' => $author_name])->id;
+    }
+
+    /**
+     * isbnから社内書籍を検索
+     *
+     * @param string $isbn
+     * @return CompanyBook|null
+     */
+    public function findBookByIsbn(string $isbn): ?CompanyBook
+    {
+        return CompanyBook::with(['book.author', 'book.bookGenres'])
+            ->whereHas('book', function ($query) use ($isbn) {
+                $query->where('isbn', $isbn);
+            })
+            ->where('in_office', true)
+            ->first();
+    }
+
+    /**
+     * 社内書籍を借りる
+     *
+     * @param BorrowBookRequest $request
+     * @param CompanyBook $company_book
+     * @return BorrowedBookLog|null
+     */
+    public function borrowBook(BorrowBookRequest $request, CompanyBook $company_book): ?BorrowedBookLog
+    {
+        $user = Auth::user();
+
+        if (! $company_book->in_office) {
+            return null;
+        }
+
+        $borrowLog = BorrowedBookLog::create([
+            'user_id' => $user->id,
+            'company_book_id' => $company_book->id,
+            'start_date' => $request->startDate,
+            'end_date' => $request->endDate,
+        ]);
+
+        $company_book->in_office = false;
+        $company_book->save();
+
+        return $borrowLog;
     }
 }

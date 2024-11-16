@@ -17,7 +17,7 @@ class BorrowedBookLog extends Model
         'user_id',
         'company_book_id',
         'start_date',
-        'end_data',
+        'end_date',
         'returned_at'
     ];
 

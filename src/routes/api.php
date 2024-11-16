@@ -23,6 +23,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/book-reviews/{review}', [BookReviewController::class, 'deleteReview']);
     Route::post('/gifts', [GiftController::class, 'sendGift']);
     Route::get('/users/{user_id}/reading-log', [UserController::class, 'readingLog']);
+    Route::post('/internal-books/scan-search', [InternalBookController::class, 'scanSearch']);
 });
 
 // 管理者のみ叩けるエンドポイント
@@ -39,4 +40,5 @@ Route::middleware('auth:sanctum', 'abilities:user')->group(function () {
     Route::post('/book-reviews', [BookReviewController::class, 'createReview']);
     Route::put('/book-reviews/{review}', [BookReviewController::class, 'updateReview']);
     Route::get('/my-page', [UserController::class, 'myPage']);
+    Route::post('/internal-books/{company_book}/borrow', [InternalBookController::class, 'borrowBook']);
 });
