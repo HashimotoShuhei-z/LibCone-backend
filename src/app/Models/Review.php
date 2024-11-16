@@ -49,4 +49,13 @@ class Review extends Model
     {
         return $this->belongsToMany(ReviewReaction::class, 'review_reactions');
     }
+
+    /**
+     *
+     * @return BelongsTo<Book, $this>
+     */
+    public function book(): BelongsTo
+    {
+        return $this->belongsTo(Book::class, 'company_book_id');
+    }
 }
