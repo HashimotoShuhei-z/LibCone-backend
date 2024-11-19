@@ -22,7 +22,7 @@ class BookHelperService
             'applicationId' => $apiKey,
         ]);
 
-        if ($response->successful() && !empty($response['Items'])) {
+        if ($response->successful() && ! empty($response['Items'])) {
             $item = $response['Items'][0]['Item'];
             return [
                 'isbn' => $item['isbn'],

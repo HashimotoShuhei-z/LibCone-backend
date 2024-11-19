@@ -8,6 +8,7 @@ use App\Models\BookPurchaseRequest;
 use App\Services\Shared\BookHelperService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
+use Exception;
 
 class BookPurchaseRequestService
 {
@@ -51,12 +52,12 @@ class BookPurchaseRequestService
         // 書籍が存在するか確認
         $book = Book::where('isbn', $request->isbn)->first();
 
-        if (!$book) {
+        if (! $book) {
             // 楽天Books APIで書籍情報を取得
             $book_data = $this->book_helper_service->fetchBookDataFromRakuten($request->isbn);
 
-            if (!$book_data) {
-                throw new \Exception('Book not found in external API');
+            if (! $book_data) {
+                throw new Exception('Book not found in external API');
             }
 
             // 著者IDを取得または作成
