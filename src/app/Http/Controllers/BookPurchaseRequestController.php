@@ -12,11 +12,11 @@ use Illuminate\Http\JsonResponse;
 
 class BookPurchaseRequestController extends Controller
 {
-    protected BookPurchaseRequestService $bookPurchaseRequestService;
+    protected BookPurchaseRequestService $book_purchase_request_service;
 
-    public function __construct(BookPurchaseRequestService $bookPurchaseRequestService)
+    public function __construct(BookPurchaseRequestService $book_purchase_request_service)
     {
-        $this->bookPurchaseRequestService = $bookPurchaseRequestService;
+        $this->book_purchase_request_service = $book_purchase_request_service;
     }
 
     /**
@@ -28,7 +28,7 @@ class BookPurchaseRequestController extends Controller
     public function bookPurchaseReqList(bookPurchaseReqListRequest $request): JsonResponse
     {
         $filters = $request->only(['book_name', 'position_id']);
-        $requests = $this->bookPurchaseRequestService->getBookPurchaseRequests($filters);
+        $requests = $this->book_purchase_request_service->getBookPurchaseRequests($filters);
         return response()->json(BookPurchaseRequestResource::collection($requests));
     }
 
@@ -40,7 +40,7 @@ class BookPurchaseRequestController extends Controller
      */
     public function makeBookPurchaseReq(CreateBookPurchaseRequest $request): JsonResponse
     {
-        $bookPurchaseRequest = $this->bookPurchaseRequestService->createBookPurchaseRequest($request);
+        $bookPurchaseRequest = $this->book_purchase_request_service->createBookPurchaseRequest($request);
         return response()->json(['message' => 'Made a purchase-request'], 201);
     }
 
@@ -58,7 +58,7 @@ class BookPurchaseRequestController extends Controller
      */
     public function confirmPurchaseRequests(ConfirmPurchaseRequest $request): JsonResponse
     {
-        $updatedCount = $this->bookPurchaseRequestService->confirmPurchaseRequests($request->request_ids);
+        $updatedCount = $this->book_purchase_request_service->confirmPurchaseRequests($request->request_ids);
 
         return response()->json([
             'message' => 'Purchase requests confirmed',
