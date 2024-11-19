@@ -14,11 +14,7 @@ class CreateBookPurchaseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string|max:255',
             'isbn' => 'required|string|max:20',
-            'itemPrice' => 'required|integer|min:0',
-            'itemUrl' => 'required|string|url',
-            'userId' => 'required|integer|exists:users,id',
             'purchaseType' => 'required|integer|in:0,1',
             'hopeDeliveryAt' => 'required|date', //TODO: |after:today入れると405エラーが起きる
         ];

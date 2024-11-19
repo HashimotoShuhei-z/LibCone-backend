@@ -15,6 +15,7 @@ class BookPurchaseRequest extends Model
 
     protected $fillable = [
         'user_id',
+        'book_id',
         'isbn',
         'book_title',
         'book_url',
@@ -36,5 +37,14 @@ class BookPurchaseRequest extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     *
+     * @return BelongsTo<User, $this>
+     */
+    public function book(): BelongsTo
+    {
+        return $this->belongsTo(Book::class);
     }
 }
