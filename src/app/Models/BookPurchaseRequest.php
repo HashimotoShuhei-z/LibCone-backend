@@ -41,7 +41,7 @@ class BookPurchaseRequest extends Model
 
     /**
      *
-     * @return BelongsTo<User, $this>
+     * @return BelongsTo<Book, $this>
      */
     public function book(): BelongsTo
     {
