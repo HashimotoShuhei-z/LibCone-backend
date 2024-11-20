@@ -233,10 +233,7 @@ review_reactions {
 book_purchase_requests {
 	int id PK
 	int user_id FK
-	string isbn
-	string book_title 
-	string book_url
-	int book_price
+	int book_id FK
 	int purchase_type
 	date hope_deliver_at
 	int purchase_status
@@ -253,7 +250,7 @@ gift_logs {
 	string updated_at 
 }
 
-companies ||--o{ users : "所属"
+companies ||--o{ users : ""
 company_genres ||--o{ companies : ""
 books ||--o{ companies_books : ""
 companies ||--o{ companies_books : ""
@@ -269,6 +266,7 @@ companies_books ||--o{ reviews : ""
 reviews ||--o{ review_reactions : ""
 users ||--o{ review_reactions : ""
 review_reactions ||--o{ stamps : ""
+books ||--o{ book_purchase_requests : ""
 users ||--o{ book_purchase_requests : ""
 gift_logs ||--o{ users : ""
 ```
