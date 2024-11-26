@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Book;
+namespace App\Http\Resources\BookBorrow;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
