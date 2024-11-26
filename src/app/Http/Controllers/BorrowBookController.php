@@ -59,7 +59,6 @@ class BorrowBookController extends Controller
     public function createBorrowedBookLog(CreateBorrowedBookLogRequest $request): JsonResponse
     {
         $borrow_log = $this->borrowed_book_service->createBorrowedBookLog($request);
-        dd($borrow_log);
 
         return response()->json(new BorrowedBookLogResource($borrow_log), 201);
     }
