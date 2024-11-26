@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookPurchaseRequestController;
 use App\Http\Controllers\BookReviewController;
+use App\Http\Controllers\BorrowBookController;
 use App\Http\Controllers\GiftController;
 use App\Http\Controllers\InternalBookController;
 use App\Http\Controllers\UserController;
@@ -32,6 +33,10 @@ Route::middleware('auth:sanctum', 'abilities:admin')->group(function () {
     Route::delete('/internal-books/{company_book}', [InternalBookController::class, 'deleteIntenalBook']);
     Route::get('/book-purchase-requests', [BookPurchaseRequestController::class, 'bookPurchaseReqList']);
     Route::post('/book-purchase-requests/confirm', [BookPurchaseRequestController::class, 'confirmPurchaseRequests']);
+    Route::get('/borrowed-book-logs', [BorrowBookController::class, 'borrowedBookLogList']);
+    Route::post('/borrowed-book-logs', [BorrowBookController::class, 'createBorrowedBookLog']);
+    Route::put('/borrowed-book-logs/{borrowed_book_log}', [BorrowBookController::class, 'updateBorrowedBookLog']);
+    Route::delete('/borrowed-book-logs/{borrowed_book_log}', [BorrowBookController::class, 'deleteBorrowedBookLog']);
 });
 
 // 一般ユーザー(社員)のみが叩けるエンドポイント
@@ -40,5 +45,5 @@ Route::middleware('auth:sanctum', 'abilities:user')->group(function () {
     Route::post('/book-reviews', [BookReviewController::class, 'createReview']);
     Route::put('/book-reviews/{review}', [BookReviewController::class, 'updateReview']);
     Route::get('/my-page', [UserController::class, 'myPage']);
-    Route::post('/internal-books/{company_book}/borrow', [InternalBookController::class, 'borrowBook']);
+    Route::post('/internal-books/{company_book}/borrow', [BorrowBookController::class, 'borrowBook']);
 });

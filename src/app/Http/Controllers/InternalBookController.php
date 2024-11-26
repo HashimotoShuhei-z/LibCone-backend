@@ -91,22 +91,4 @@ class InternalBookController extends Controller
 
         return response()->json(new InternalBookItemResource($company_book));
     }
-
-    /**
-     * 社員が書籍を借りる
-     *
-     * @param BorrowBookRequest $request
-     * @param CompanyBook $company_book
-     * @return JsonResponse
-     */
-    public function borrowBook(BorrowBookRequest $request, CompanyBook $company_book): JsonResponse
-    {
-        $borrow_log = $this->internal_book_service->borrowBook($request, $company_book);
-
-        if (! $borrow_log) {
-            return response()->json(['error' => 'Book is not available for borrowing'], 404);
-        }
-
-        return response()->json(new BorrowResource($borrow_log), 201);
-    }
 }

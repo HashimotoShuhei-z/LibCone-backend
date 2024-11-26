@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Book;
+namespace App\Http\Requests\BookBorrow;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class BorrowBookRequest extends FormRequest
+class CreateBorrowedBookLogRequest extends FormRequest
 {
     /**
      * @return array<string, string>
@@ -14,8 +14,11 @@ class BorrowBookRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'startDate' => 'required|date',
-            'endDate' => 'required|date',
+            'userId' => 'required|integer|exists:users,id',
+            'bookId' => 'required|integer|exists:books,id',
+            'startDate' => 'required|date|before:endDate',
+            'endDate' => 'required|date|after:startDate',
+            'returnDate' => 'nullable|date',
         ];
     }
 
@@ -26,5 +29,4 @@ class BorrowBookRequest extends FormRequest
             'error' => $validator->errors(),
         ], 500));
     }
-
 }
