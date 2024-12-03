@@ -205,7 +205,7 @@ borrowed_book_logs {
 reviews {
 	int id PK
 	int user_id FK
-	int book_company_id FK
+	int company_book_id FK
 	string review_title
 	string review_content
 	int review_rate
@@ -250,6 +250,15 @@ gift_logs {
 	string updated_at 
 }
 
+reading_logs {
+	int id PK
+	int user_id FK
+	int company_book_id FK
+	int start_page
+	int end_page
+	string content
+	}
+
 companies ||--o{ users : ""
 company_genres ||--o{ companies : ""
 books ||--o{ companies_books : ""
@@ -257,7 +266,7 @@ companies ||--o{ companies_books : ""
 authors ||--o{ books : ""
 book_genres ||--o{ books_book_genres : ""
 books ||--o{ books_book_genres : ""
-books ||--o{ borrowed_book_logs : ""
+companies_books ||--o{ borrowed_book_logs : ""
 users ||--o{ borrowed_book_logs : ""
 users ||--o{ users_positions : ""
 positions ||--o{ users_positions : ""
@@ -269,6 +278,8 @@ review_reactions ||--o{ stamps : ""
 books ||--o{ book_purchase_requests : ""
 users ||--o{ book_purchase_requests : ""
 gift_logs ||--o{ users : ""
+users ||--o{ reading_logs : ""
+companies_books ||--o{ reading_logs : ""
 ```
 
 ## API設計
