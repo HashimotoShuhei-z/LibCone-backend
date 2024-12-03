@@ -250,7 +250,7 @@ gift_logs {
 	string updated_at 
 }
 
-reading_logs {
+reading_memos {
 	int id PK
 	int user_id FK
 	int company_book_id FK
@@ -278,8 +278,8 @@ review_reactions ||--o{ stamps : ""
 books ||--o{ book_purchase_requests : ""
 users ||--o{ book_purchase_requests : ""
 gift_logs ||--o{ users : ""
-users ||--o{ reading_logs : ""
-companies_books ||--o{ reading_logs : ""
+users ||--o{ reading_memos : ""
+companies_books ||--o{ reading_memos : ""
 ```
 
 ## API設計
