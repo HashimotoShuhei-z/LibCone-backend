@@ -35,6 +35,7 @@ class InternalBookController extends Controller
         $company_id = Auth::user()->company_id;
         $filters = $request->only(['book_name', 'book_genre_id']);
         $books = $this->internal_book_service->getInternalBookList($filters, $company_id);
+        dd($books);
         return InternalBookListResource::collection($books);
     }
 
