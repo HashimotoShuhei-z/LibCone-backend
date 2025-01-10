@@ -15,7 +15,7 @@ class InternalBookListResource extends JsonResource
         $item = $this->resource;
 
         return [
-            'bookId' => $item->book->id,
+            'companyBookId' => $item->id,
             'bookName' => $item->book->book_title,
             'bookGenreName' => $item->book->bookGenres->pluck('genre_name'),  // ジャンル名を配列として取得
             'bookImage' => $item->book->book_image,
