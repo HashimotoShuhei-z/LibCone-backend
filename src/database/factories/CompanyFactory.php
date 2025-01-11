@@ -22,4 +22,3 @@ class CompanyFactory extends Factory
         ];
     }
 }
-
