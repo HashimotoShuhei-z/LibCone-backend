@@ -17,33 +17,26 @@ class InternalBookTest extends TestCase
 
     protected string $adminToken;
     protected string $userToken;
+    protected Company $company; // テスト用会社
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        // 楽天Books APIのモック
-        Http::fake([
-            'https://app.rakuten.co.jp/*' => Http::response([
-                'Items' => [
-                    ['Item' => [
-                        'isbn' => '9781234567897',
-                        'title' => 'Test Book',
-                        'publisherName' => 'Test Publisher',
-                        'largeImageUrl' => 'https://example.com/image.jpg',
-                        'author' => 'Test Author',
-                    ]]
-                ]
-            ], 200),
-        ]);
+        // テスト用の会社を作成
+        $this->company = Company::factory()->create();
 
         // 管理者ユーザーの作成とトークン生成
-        $this->adminToken = User::factory()->create(['type_id' => 1])
-            ->createToken('authToken', ['admin'])->plainTextToken;
+        $this->adminToken = User::factory()->create([
+            'type_id' => 1, // 管理者
+            'company_id' => $this->company->id, // 管理者を会社に紐付け
+        ])->createToken('authToken', ['admin'])->plainTextToken;
 
         // 一般ユーザーの作成とトークン生成
-        $this->userToken = User::factory()->create(['type_id' => 0])
-            ->createToken('authToken', ['user'])->plainTextToken;
+        $this->userToken = User::factory()->create([
+            'type_id' => 0, // 一般ユーザー
+            'company_id' => $this->company->id, // 一般ユーザーを会社に紐付け
+        ])->createToken('authToken', ['user'])->plainTextToken;
 
         // テストデータ生成
         $this->setUpTestData();
@@ -55,82 +48,76 @@ class InternalBookTest extends TestCase
     protected function setUpTestData(): void
     {
         $author = Author::factory()->create();
-        $book = Book::factory()->create(['author_id' => $author->id]);
 
-        $company = Company::factory()->create();
-        CompanyBook::factory()->count(3)->create([
-            'company_id' => $company->id,
+        $book = Book::factory()->create([
+            'isbn' => '9781234567897',
+            'author_id' => $author->id,
+        ]);
+
+        CompanyBook::factory()->create([
+            'company_id' => $this->company->id,
             'book_id' => $book->id,
             'in_office' => true,
         ]);
     }
 
-    /** @test */
-    public function test_internal_book_list_as_authenticated_user(): void
+    public function test_internal_book_list(): void
     {
         $response = $this->withHeader('Authorization', "Bearer {$this->userToken}")
-                         ->getJson('/api/internal-books');
+                        ->getJson('/api/internal-books');
 
-        $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     '*' => [
-                         'companyBookId',
-                         'bookName',
-                         'bookGenreName',
-                         'bookImage',
-                         'bookPublisher',
-                         'authorId',
-                         'authorName',
-                         'averageReviewRate',
-                         'rentalInformation',
-                     ],
-                 ]);
+        $response->assertStatus(200);
+
+        $response->assertJsonFragment([
+            'companyBookId' => CompanyBook::first()->id,
+            'bookName' => 'Test Book',
+            'bookPublisher' => 'Test Publisher',
+            'bookImage' => 'https://example.com/image.jpg',
+            'authorName' => 'Test Author',
+            'rentalInformation' => true,
+        ]);
     }
 
-    /** @test */
-    public function test_internal_book_item_as_authenticated_user(): void
+    public function test_internal_book_item(): void
     {
         $companyBook = CompanyBook::first();
 
         $response = $this->withHeader('Authorization', "Bearer {$this->userToken}")
                          ->getJson("/api/internal-books/{$companyBook->id}");
+    
+        $response->assertStatus(200);
+    
+        $response->assertJson([
+            [
+                'book' => [
+                    'companyBookId' => $companyBook->id,
+                    'bookName' => 'Test Book',
+                    'bookPublisher' => 'Test Publisher',
+                    'bookImage' => 'https://example.com/image.jpg',
+                    'authorName' => 'Test Author',
+                    'rentalInformation' => true,
+                ],
+                'reviews' => [],
+            ],
+        ]);
+    } 
 
-        $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'book' => [
-                         'companyBookId',
-                         'bookName',
-                         'bookGenreName',
-                         'bookImage',
-                         'bookPublisher',
-                         'authorId',
-                         'authorName',
-                         'averageReviewRate',
-                         'rentalInformation',
-                     ],
-                     'reviews',
-                 ]);
-    }
-
-    /** @test */
-    public function test_create_internal_book_as_admin(): void
+    public function test_create_internal_book(): void
     {
-        $bookData = [
-            'isbn' => '9781234567897',
-        ];
+        $bookData = ['isbn' => '9781234567897'];
 
         $response = $this->withHeader('Authorization', "Bearer {$this->adminToken}")
-                         ->postJson('/api/internal-books', $bookData);
+                        ->postJson('/api/internal-books', $bookData);
 
         $response->assertStatus(201)
-                 ->assertJson([
-                     'message' => 'Book created',
-                 ]);
+                ->assertJson(['message' => 'Book created']);
 
-        $this->assertDatabaseHas('books', ['isbn' => '9781234567897']);
+        $this->assertDatabaseHas('books', [
+            'isbn' => '9781234567897',
+            'book_title' => 'Test Book',
+        ]);
     }
 
-    /** @test */
     public function test_create_internal_book_as_non_admin(): void
     {
         $bookData = [
@@ -143,8 +130,7 @@ class InternalBookTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /** @test */
-    public function test_delete_internal_book_as_admin(): void
+    public function test_delete_internal_book(): void
     {
         $companyBook = CompanyBook::first();
 
@@ -156,7 +142,6 @@ class InternalBookTest extends TestCase
         $this->assertDatabaseMissing('companies_books', ['id' => $companyBook->id]);
     }
 
-    /** @test */
     public function test_delete_internal_book_as_non_admin(): void
     {
         $companyBook = CompanyBook::first();
