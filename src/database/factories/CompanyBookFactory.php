@@ -21,7 +21,7 @@ class CompanyBookFactory extends Factory
         return [
             'company_id' => Company::factory(),
             'book_id' => Book::factory(),
-            'in_office' => $this->faker->boolean,
+            'in_office' => true,
         ];
     }
 }

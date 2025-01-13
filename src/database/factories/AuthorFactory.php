@@ -17,9 +17,7 @@ class AuthorFactory extends Factory
     public function definition(): array
     {
         return [
-            'author_name' => $this->faker->name,
-            'created_at' => now(),
-            'updated_at' => now(),
+            'author_name' => 'Test Author',
         ];
     }
 }

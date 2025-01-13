@@ -13,12 +13,10 @@ class CompanyFactory extends Factory
     public function definition(): array
     {
         return [
-            'company_name' => $this->faker->company,
+            'company_name' => 'Test Company',
             'company_genre_id' => CompanyGenre::factory(),
-            'monthly_available_points' => $this->faker->numberBetween(1000, 10000),
-            'review_bonus_point' => $this->faker->numberBetween(100, 500),
-            'created_at' => now(),
-            'updated_at' => now(),
+            'monthly_available_points' => 5000,
+            'review_bonus_point' => 1000,
         ];
     }
 }

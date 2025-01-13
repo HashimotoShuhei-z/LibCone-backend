@@ -19,12 +19,10 @@ class BookFactory extends Factory
     {
         return [
             'isbn' => $this->faker->unique()->isbn13,
-            'book_title' => $this->faker->sentence(3),
-            'book_publisher' => $this->faker->company,
-            'book_image' => $this->faker->imageUrl(200, 300, 'books', true),
+            'book_title' => 'Test Book',
+            'book_publisher' => 'Test Publisher',
+            'book_image' => 'https://example.com/image.jpg',
             'author_id' => Author::factory(),
-            'created_at' => now(),
-            'updated_at' => now(),
         ];
     }
 }

@@ -17,10 +17,8 @@ class CompanyGenreFactory extends Factory
     public function definition(): array
     {
         return [
-            'genre_name' => $this->faker->word,
-            'image_color' => $this->faker->hexColor,
-            'created_at' => now(),
-            'updated_at' => now(),
+            'genre_name' => 'IT',
+            'image_color' => '#4169e1',
         ];
     }
 }
