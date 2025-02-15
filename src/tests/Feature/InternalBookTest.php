@@ -8,7 +8,6 @@ use App\Models\Company;
 use App\Models\CompanyBook;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class InternalBookTest extends TestCase
@@ -61,13 +60,14 @@ class InternalBookTest extends TestCase
         ]);
     }
 
-    public function test_internal_book_list(): void
+    public function test_正常系_社内書籍の一覧取得(): void
     {
         $response = $this->withHeader('Authorization', "Bearer {$this->userToken}")
                         ->getJson('/api/internal-books');
 
         $response->assertStatus(200);
 
+        // TODO:平均評価のキーカラムについてのテストはまだ未実装
         $response->assertJsonFragment([
             'companyBookId' => CompanyBook::first()->id,
             'bookName' => 'Test Book',
@@ -78,7 +78,14 @@ class InternalBookTest extends TestCase
         ]);
     }
 
-    public function test_internal_book_item(): void
+    public function test_異常系_トークン無しで社内書籍の一覧取得(): void
+    {
+        $response = $this->getJson('/api/internal-books');
+
+        $response->assertStatus(401);
+    }
+
+    public function test_正常系_社内書籍の詳細取得(): void
     {
         $companyBook = CompanyBook::first();
 
@@ -102,7 +109,7 @@ class InternalBookTest extends TestCase
         ]);
     }
 
-    public function test_create_internal_book(): void
+    public function test_正常系_管理者による社内書籍の作成(): void
     {
         $bookData = ['isbn' => '9781234567897'];
 
@@ -118,7 +125,7 @@ class InternalBookTest extends TestCase
         ]);
     }
 
-    public function test_create_internal_book_as_non_admin(): void
+    public function test_異常系_ユーザーによる社内書籍の作成(): void
     {
         $bookData = [
             'isbn' => '9781234567897',
@@ -130,7 +137,7 @@ class InternalBookTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function test_delete_internal_book(): void
+    public function test_正常系_管理者による社内書籍の削除(): void
     {
         $companyBook = CompanyBook::first();
 
@@ -139,10 +146,10 @@ class InternalBookTest extends TestCase
 
         $response->assertStatus(204);
 
-        $this->assertDatabaseMissing('companies_books', ['id' => $companyBook->id]);
+        $this->assertSoftDeleted('companies_books', ['id' => $companyBook->id]);
     }
 
-    public function test_delete_internal_book_as_non_admin(): void
+    public function test_異常系_ユーザーによる社内書籍の削除(): void
     {
         $companyBook = CompanyBook::first();
 
