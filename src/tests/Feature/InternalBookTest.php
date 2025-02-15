@@ -109,6 +109,15 @@ class InternalBookTest extends TestCase
         ]);
     }
 
+    public function test_異常系_トークン無しで社内書籍の詳細取得(): void
+    {
+        $companyBook = CompanyBook::first();
+
+        $response = $this->getJson("/api/internal-books/{$companyBook->id}");
+
+        $response->assertStatus(401);
+    }
+
     public function test_正常系_管理者による社内書籍の作成(): void
     {
         $bookData = ['isbn' => '9781234567897'];
@@ -137,6 +146,18 @@ class InternalBookTest extends TestCase
         $response->assertStatus(403);
     }
 
+    public function test_異常系_トークン無しで社内書籍の作成(): void
+    {
+        $bookData = [
+            'isbn' => '9781234567897',
+        ];
+
+        $response = $this->postJson('/api/internal-books', $bookData);
+
+        $response->assertStatus(401);
+    }
+
+
     public function test_正常系_管理者による社内書籍の削除(): void
     {
         $companyBook = CompanyBook::first();
@@ -158,4 +179,14 @@ class InternalBookTest extends TestCase
 
         $response->assertStatus(403);
     }
+
+    public function test_異常系_トークン無しで社内書籍の削除(): void
+    {
+        $companyBook = CompanyBook::first();
+
+        $response = $this->deleteJson("/api/internal-books/{$companyBook->id}");
+
+        $response->assertStatus(401);
+    }
+
 }
