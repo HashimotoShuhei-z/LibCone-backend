@@ -7,6 +7,7 @@ use App\Models\Book;
 use App\Models\Company;
 use App\Models\CompanyBook;
 use App\Models\User;
+use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -60,9 +61,27 @@ class InternalBookTest extends TestCase
         ]);
     }
 
-    public function test_正常系_社内書籍の一覧取得(): void
+    public function test_正常系_ユーザーによる社内書籍の一覧取得(): void
     {
         $response = $this->withHeader('Authorization', "Bearer {$this->userToken}")
+                        ->getJson('/api/internal-books');
+
+        $response->assertStatus(200);
+
+        // TODO:平均評価のキーカラムについてのテストはまだ未実装
+        $response->assertJsonFragment([
+            'companyBookId' => CompanyBook::first()->id,
+            'bookName' => 'Test Book',
+            'bookPublisher' => 'Test Publisher',
+            'bookImage' => 'https://example.com/image.jpg',
+            'authorName' => 'Test Author',
+            'rentalInformation' => true,
+        ]);
+    }
+
+    public function test_正常系_管理者による社内書籍の一覧取得(): void
+    {
+        $response = $this->withHeader('Authorization', "Bearer {$this->adminToken}")
                         ->getJson('/api/internal-books');
 
         $response->assertStatus(200);
@@ -85,11 +104,35 @@ class InternalBookTest extends TestCase
         $response->assertStatus(401);
     }
 
-    public function test_正常系_社内書籍の詳細取得(): void
+    public function test_正常系_ユーザーによる社内書籍の詳細取得(): void
     {
         $companyBook = CompanyBook::first();
 
         $response = $this->withHeader('Authorization', "Bearer {$this->userToken}")
+                         ->getJson("/api/internal-books/{$companyBook->id}");
+    
+        $response->assertStatus(200);
+    
+        $response->assertJson([
+            [
+                'book' => [
+                    'companyBookId' => $companyBook->id,
+                    'bookName' => 'Test Book',
+                    'bookPublisher' => 'Test Publisher',
+                    'bookImage' => 'https://example.com/image.jpg',
+                    'authorName' => 'Test Author',
+                    'rentalInformation' => true,
+                ],
+                'reviews' => [],
+            ],
+        ]);
+    }
+
+    public function test_正常系_管理者による社内書籍の詳細取得(): void
+    {
+        $companyBook = CompanyBook::first();
+
+        $response = $this->withHeader('Authorization', "Bearer {$this->adminToken}")
                          ->getJson("/api/internal-books/{$companyBook->id}");
     
         $response->assertStatus(200);
@@ -118,9 +161,17 @@ class InternalBookTest extends TestCase
         $response->assertStatus(401);
     }
 
+    public function test_異常系_存在しない社内書籍の詳細取得(): void
+    {
+        $response = $this->withHeader('Authorization', "Bearer {$this->userToken}")
+                         ->getJson("/api/internal-books/0");
+
+        $response->assertStatus(404);
+    }
+
     public function test_正常系_管理者による社内書籍の作成(): void
     {
-        $bookData = ['isbn' => '9781234567897'];
+        $bookData = ['isbn' => '9784873115658']; // リーダブルコードのisbnを指定
 
         $response = $this->withHeader('Authorization', "Bearer {$this->adminToken}")
                         ->postJson('/api/internal-books', $bookData);
@@ -129,8 +180,34 @@ class InternalBookTest extends TestCase
                 ->assertJson(['message' => 'Book created']);
 
         $this->assertDatabaseHas('books', [
-            'isbn' => '9781234567897',
-            'book_title' => 'Test Book',
+            'isbn' => '9784873115658',
+            'book_title' => 'リーダブルコード',
+        ]);
+    }
+
+    public function test_正常系_指定したisbnが既に書籍テーブルに存在した場合の社内書籍の作成(): void
+    {
+        $existed_book = Book::factory()->create([
+            'isbn' => '9784873115658',
+            'author_id' => Author::factory(),
+        ]);
+
+        $bookData = ['isbn' => '9781234567897'];
+
+        $response = $this->withHeader('Authorization', "Bearer {$this->adminToken}")
+                        ->postJson('/api/internal-books', $bookData);
+
+        $response->assertStatus(201)
+                ->assertJson(['message' => 'Book created']);
+
+        $created_company_book = CompanyBook::where('company_id', $this->company->id)
+                                           ->latest()
+                                           ->first();
+
+        $this->assertDatabaseHas('companies_books', [
+            'company_id' => $this->company->id,
+            'book_id' => $created_company_book->id,
+            'in_office' => false,
         ]);
     }
 
@@ -144,6 +221,23 @@ class InternalBookTest extends TestCase
                          ->postJson('/api/internal-books', $bookData);
 
         $response->assertStatus(403);
+    }
+
+    public function test_異常系_指定したisbnが楽天BooksAPIにて見つからなかった場合の社内書籍の作成(): void
+    {
+        // 例外がハンドリングされずにそのままスローされるようにする
+        $this->withoutExceptionHandling();
+        
+        // 例外が発生することを期待する
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('書籍が見つかりませんでした。');
+
+        $bookData = [
+            'isbn' => '9999999999999',
+        ];
+
+        $this->withHeader('Authorization', "Bearer {$this->adminToken}")
+             ->postJson('/api/internal-books', $bookData);
     }
 
     public function test_異常系_トークン無しで社内書籍の作成(): void
