@@ -79,7 +79,7 @@ docker-compose up --build
 docker compose exec app bash
 
 # laravel内でcomposer install
-cd/src
+cd src
 composer install
 ```
 
