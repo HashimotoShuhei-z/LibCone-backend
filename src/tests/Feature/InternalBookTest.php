@@ -100,7 +100,7 @@ class InternalBookTest extends TestCase
                 'reviews' => [],
             ],
         ]);
-    } 
+    }
 
     public function test_create_internal_book(): void
     {
