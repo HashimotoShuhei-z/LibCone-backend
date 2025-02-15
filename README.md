@@ -236,6 +236,8 @@ book_purchase_requests {
 	int id PK
 	int user_id FK
 	int book_id FK
+        int item_price
+	string item_url 
 	int purchase_type
 	date hope_deliver_at
 	int purchase_status
