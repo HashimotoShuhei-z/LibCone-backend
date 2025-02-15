@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Book\BorrowBookRequest;
 use App\Http\Requests\Book\ScanSearchRequest;
 use App\Http\Requests\InternalBook\CreateInternalBookRequest;
 use App\Http\Requests\InternalBook\InternalBookListRequest;
-use App\Http\Resources\Book\BorrowResource;
 use App\Http\Resources\InternalBook\InternalBookItemResource;
 use App\Http\Resources\InternalBook\InternalBookListResource;
 use App\Models\CompanyBook;
