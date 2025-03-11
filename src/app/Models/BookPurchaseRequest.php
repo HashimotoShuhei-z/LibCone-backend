@@ -16,17 +16,14 @@ class BookPurchaseRequest extends Model
     protected $fillable = [
         'user_id',
         'book_id',
-        'isbn',
-        'book_title',
-        'book_url',
-        'book_price',
+        'item_url',
+        'item_price',
         'purchase_type',
         'hope_deliver_at',
         'purchase_status',
     ];
 
     protected $casts = [
-        'book_price' => 'integer',
         'hope_deliver_at' => 'date',
     ];
 

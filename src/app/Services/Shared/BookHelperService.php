@@ -28,7 +28,9 @@ class BookHelperService
                 'isbn' => $item['isbn'],
                 'title' => $item['title'],
                 'publisher' => $item['publisherName'],
+                'item_price' => $item['itemPrice'],
                 'image_url' => $item['largeImageUrl'],
+                'item_url' => $item['itemUrl'],
                 'author' => $item['author'],
             ];
         }

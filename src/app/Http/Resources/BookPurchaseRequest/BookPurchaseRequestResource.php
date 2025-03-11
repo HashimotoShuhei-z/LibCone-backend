@@ -15,9 +15,9 @@ class BookPurchaseRequestResource extends JsonResource
         $item = $this->resource;
 
         return [
-            'title' => $item->book_title,
-            'itemPrice' => $item->book_price,
-            'itemUrl' => $item->book_url,
+            'title' => $item->book->book_title,
+            'itemPrice' => $item->item_price,
+            'itemUrl' => $item->item_url,
             'userId' => $item->user->id,
             'userName' => $item->user->name,
             'userIcon' => $item->user->icon_url,

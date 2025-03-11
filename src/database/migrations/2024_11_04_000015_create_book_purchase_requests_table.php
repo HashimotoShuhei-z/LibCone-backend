@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('book_id')->constrained()->cascadeOnDelete();
+            $table->integer('item_price')->nullable();
+            $table->string('item_url')->nullable();
             $table->integer('purchase_type'); # 0:個人購入, 1:会社購入
             $table->date('hope_deliver_at')->nullable();
             $table->integer('purchase_status')->default(0); # 0:未購入, 1:購入申請中, 2:配達中, 3:配達済み, 4:拒否

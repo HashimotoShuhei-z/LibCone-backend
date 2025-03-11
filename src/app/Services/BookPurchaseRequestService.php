@@ -49,35 +49,36 @@ class BookPurchaseRequestService
      */
     public function createBookPurchaseRequest(CreateBookPurchaseRequest $request): BookPurchaseRequest
     {
-        // 書籍が存在するか確認
-        $book = Book::where('isbn', $request->isbn)->first();
+        // 楽天Books APIで書籍情報を取得（常時実施させたい）(書籍の価格やURLが変動する可能性を考慮)
+        $book_from_api = $this->book_helper_service->fetchBookDataFromRakuten($request->isbn);
 
-        if (! $book) {
-            // 楽天Books APIで書籍情報を取得
-            $book_data = $this->book_helper_service->fetchBookDataFromRakuten($request->isbn);
-
-            if (! $book_data) {
-                throw new Exception('Book not found in external API');
-            }
-
-            // 著者IDを取得または作成
-            $author_id = $this->book_helper_service->getOrCreateAuthorId($book_data['author']);
-
-            // 書籍を作成
-            $book = Book::create([
-                'isbn' => $book_data['isbn'],
-                'book_title' => $book_data['title'],
-                'book_publisher' => $book_data['publisher'],
-                'book_image' => $book_data['image_url'],
-                'author_id' => $author_id,
-            ]);
+        if (! $book_from_api) {
+            throw new Exception('Book not found in external API');
         }
 
-        // dd($book ->id);
+        // 既に書籍テーブルに同じISBNのレコードが存在するかチェック
+        $existingBook = Book::where('isbn', $request->isbn)->first();
+
+        if (! $existingBook) {
+            // 存在しない場合は、APIから取得したデータをもとに書籍を作成
+            $author_id = $this->book_helper_service->getOrCreateAuthorId($book_from_api['author']);
+            
+            $book = Book::create([
+                'isbn'           => $book_from_api['isbn'],
+                'book_title'     => $book_from_api['title'],
+                'book_publisher' => $book_from_api['publisher'],
+                'book_image'     => $book_from_api['image_url'],
+                'author_id'      => $author_id,
+            ]);
+        } else {
+            $book = $existingBook;
+        }
 
         $new_book_purchase_request = [
             'user_id' => Auth::user()->id,
             'book_id' => $book->id,
+            'item_price' => $book_from_api['item_price'],
+            'item_url' => $book_from_api['item_url'],
             'purchase_type' => $request->purchaseType,
             'hope_deliver_at' => $request->hopeDeliveryAt,
         ];
